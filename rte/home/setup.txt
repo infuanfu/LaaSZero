@@ -1,0 +1,7 @@
+- pyserial (newer versions do implicit open in CTOR!)
+- pySDL
+- SDL (build yourself)
+- gpio tool (build yourself)
+
+- disable console on /dev/ttyAMA0
+- remap audio output to PWM gpios
