@@ -3,7 +3,7 @@
 blurb
 
 ## TODO
- * use venv on dev, but system packages on prod
+ * use a VM or docker and always install software packages using apt
    * pyserial
    * python sdl (python3-pygame?)
 
