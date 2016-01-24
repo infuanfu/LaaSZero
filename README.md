@@ -6,6 +6,7 @@ blurb
  * use a VM or docker and always install software packages using apt
    * pyserial
    * python sdl (python3-pygame?)
+ * set up py.test
 
 # Protocols
 
