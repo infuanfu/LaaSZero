@@ -20,8 +20,10 @@ MOUNTOFFSET=$(file "$IMG"|sed 's/;/\n/g'|grep "partition 2"|sed 's/, /\n/g'|grep
 
 MOUNT=$(mktemp -d)
 mount $(pwd)"/$IMG" -o offset=$MOUNTOFFSET $MOUNT
-echo $(cat $MOUNT/etc/ld.so.preload | awk -F# '{print $1$2}') >$MOUNT/etc/ld.so.preload
-echo $(cat $MOUNT/etc/fstab | sed 's/sda/mmcblk0p/g') >$MOUNT/etc/fstab
+UNCOMMENTED=$(cat $MOUNT/etc/ld.so.preload | awk -F# '{print $1$2}')
+echo "$UNCOMMENTED" >$MOUNT/etc/ld.so.preload
+MMCMAPPED=$(cat $MOUNT/etc/fstab | sed 's/sda/mmcblk0p/g')
+echo "$MMCMAPPED" >$MOUNT/etc/fstab
 
 echo "set /etc/ld.so.preload to:"
 cat $MOUNT/etc/ld.so.preload
