@@ -1,6 +1,13 @@
 # Infuanfu's Location as a service
 
-blurb
+## Further Resources
+
+### Docker
+
+The docker image can be downloaded from https://hub.docker.com/r/infuanfu/laaszero/. Or just do a
+```
+docker pull infuanfu/laaszero
+```
 
 ## TODO
  * use a VM or docker and always install software packages using apt
