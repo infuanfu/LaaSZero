@@ -10,20 +10,19 @@ Download latest Raspbian image from [raspberrypi.org/downloads/raspbian/](https:
 Get the kernel suitable for your image at [github.com/dhruvvyas90/qemu-rpi-kernel](https://github.com/dhruvvyas90/qemu-rpi-kernel)
 
 ### Prepare image
-The entry in `/etc/ld.so.preload` needs to be commented out. There's a script for that
+Now you need to apply a few changes to the image you downloaded:
 
-    sudo ./prepareimage.sh 2015-11-21-raspbian-jessie.img
+ * comment out the entry in `/etc/ld.so.preload`
+ * change `/etc/fstab` to point to `/dev/sda*` instead of `/dev/mmcblk0p*`
+ * comment out the entry for `/boot` in `/etc/fstab`
+ * create a symlink in `/etc/modules` matching the QEMU kernel version you're using
 
-### Fix partitions
-First time you boot the image up, you might end up in a root console. You can scroll through systemd's log to find out what went wrong using
+Luckily, there's a script for that:
 
-    journalctl -xb
-    umount /dev/sdb2
-    fdisk /dev/sdb2
-    shutdown -r now
+    sudo ./prepareimage.sh 2015-11-21-raspbian-jessie.img 4.1.7
 
+Note: You can revert the changes the script makes using `restoreimage.sh`
 
 ## Start Raspian in QEMU
 
     ./startqemu.sh kernel-qemu-4.1.7-jessie 2015-11-21-raspbian-jessie.img
-
