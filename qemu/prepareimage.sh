@@ -24,7 +24,7 @@ MOUNT=$(mktemp -d)
 mount $(pwd)"/$IMG" -o offset=$MOUNTOFFSET $MOUNT
 COMMENTED=$(cat $MOUNT/etc/ld.so.preload | awk -F# '{print "#" $1$2}')
 echo "$COMMENTED" >$MOUNT/etc/ld.so.preload
-SDAMAPPED=$(cat $MOUNT/etc/fstab | sed 's/mmcblk0p/sda/g')
+SDAMAPPED=$(cat $MOUNT/etc/fstab | sed 's/mmcblk0p/sda/g' | sed 's|.*/dev/sda1|#/dev/sda1|')
 echo "$SDAMAPPED" >$MOUNT/etc/fstab
 
 echo "set /etc/ld.so.preload to:"
