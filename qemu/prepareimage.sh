@@ -32,7 +32,7 @@ echo "remapping /etc/fstab and disabling /boot"
 SDAMAPPED=$(cat $MOUNT/etc/fstab | sed 's/mmcblk0p/sda/g' | sed 's|.*/dev/sda1|#/dev/sda1|')
 echo "$SDAMAPPED" >$MOUNT/etc/fstab
 
-echo "cleaning up /lib/modules"
+echo "cleaning up symlinks /lib/modules"
 # cleanup links
 find $MOUNT/lib/modules -type l -exec rm {} ";"
 

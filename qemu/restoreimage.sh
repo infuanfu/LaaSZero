@@ -31,15 +31,15 @@ echo "restoring original mapping in /etc/fstab and enabling /boot"
 MMCMAPPED=$(cat $MOUNT/etc/fstab | sed 's|#/dev/sda1|/dev/sda1|' | sed 's/sda/mmcblk0p/g')
 echo "$MMCMAPPED" >$MOUNT/etc/fstab
 
-echo "cleaning up /lib/modules"
+echo "cleaning up symlinks in /lib/modules"
 find $MOUNT/lib/modules -type l -exec rm {} ";"
 
 echo "done."
 
-echo "set /etc/ld.so.preload to:"
+echo -e "\nset /etc/ld.so.preload to:"
 cat $MOUNT/etc/ld.so.preload
 
-echo "set /etc/fstab to:"
+echo -e "\nset /etc/fstab to:"
 cat $MOUNT/etc/fstab
 
 umount $MOUNT
