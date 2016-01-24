@@ -13,19 +13,28 @@ if [[ -z $1 ]]; then
     exit 1
 fi
 
-echo "enable etc/ld.so.preload and unbend /etc/fstab in image"
 
 IMG=$1
 MOUNTOFFSET=$(file "$IMG"|sed 's/;/\n/g'|grep "partition 2"|sed 's/, /\n/g'|grep startsector|awk '{print $2 " * 512"}'|bc)
 
+echo "mount offset is $MOUNTOFFSET"
+
 MOUNT=$(mktemp -d)
+echo "mounting to $MOUNT"
 mount $(pwd)"/$IMG" -o offset=$MOUNTOFFSET $MOUNT
+
+echo "restoring entry in /etc/ld.so.preload"
 UNCOMMENTED=$(cat $MOUNT/etc/ld.so.preload | awk -F# '{print $1$2}')
 echo "$UNCOMMENTED" >$MOUNT/etc/ld.so.preload
+
+echo "restoring original mapping in /etc/fstab and enabling /boot"
 MMCMAPPED=$(cat $MOUNT/etc/fstab | sed 's|#/dev/sda1|/dev/sda1|' | sed 's/sda/mmcblk0p/g')
 echo "$MMCMAPPED" >$MOUNT/etc/fstab
 
+echo "cleaning up /lib/modules"
 find $MOUNT/lib/modules -type l -exec rm {} ";"
+
+echo "done."
 
 echo "set /etc/ld.so.preload to:"
 cat $MOUNT/etc/ld.so.preload
