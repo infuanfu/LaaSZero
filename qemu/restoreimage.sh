@@ -1,8 +1,6 @@
 #!/bin/sh
 #
-# prepares raspbian image for use with qemu
-#
-# tested with raspbian jessie
+# restores changes applied by prepareimage.sh
 #
 
 if [[ $EUID -ne 0 ]]; then
@@ -15,15 +13,15 @@ if [[ -z $1 ]]; then
     exit 1
 fi
 
-echo "disabling etc/ld.so.preload and bending /etc/fstab in image"
+echo "enable etc/ld.so.preload and unbend /etc/fstab in image"
 
 IMG=$1
 MOUNTOFFSET=$(file "$IMG"|sed 's/;/\n/g'|grep "partition 2"|sed 's/, /\n/g'|grep startsector|awk '{print $2 " * 512"}'|bc)
 
 MOUNT=$(mktemp -d)
 mount $(pwd)"/$IMG" -o offset=$MOUNTOFFSET $MOUNT
-echo $(cat $MOUNT/etc/ld.so.preload | awk -F# '{print "#" $1$2}') >$MOUNT/etc/ld.so.preload
-echo $(cat $MOUNT/etc/fstab | sed 's/mmcblk0p/sda/g') >$MOUNT/etc/fstab
+echo $(cat $MOUNT/etc/ld.so.preload | awk -F# '{print $1$2}') >$MOUNT/etc/ld.so.preload
+echo $(cat $MOUNT/etc/fstab | sed 's/sda/mmcblk0p/g') >$MOUNT/etc/fstab
 
 echo "set /etc/ld.so.preload to:"
 cat $MOUNT/etc/ld.so.preload
