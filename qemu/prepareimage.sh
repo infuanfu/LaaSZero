@@ -10,8 +10,8 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-if [[ -z $1 ]]; then
-    echo "must provide image file as param"
+if [[ -z $2 ]]; then
+    echo "Usage: $0 <image file> <kernel version>"
     exit 1
 fi
 
@@ -27,11 +27,20 @@ echo "$COMMENTED" >$MOUNT/etc/ld.so.preload
 SDAMAPPED=$(cat $MOUNT/etc/fstab | sed 's/mmcblk0p/sda/g' | sed 's|.*/dev/sda1|#/dev/sda1|')
 echo "$SDAMAPPED" >$MOUNT/etc/fstab
 
-echo "set /etc/ld.so.preload to:"
+# cleanup links
+find $MOUNT/lib/modules -type l -exec rm {} ";"
+
+# set new link
+ln -s $(ls $MOUNT/lib/modules|head -n1) "$MOUNT/lib/modules/$2+"
+
+echo -e "\nset /etc/ld.so.preload to:"
 cat $MOUNT/etc/ld.so.preload
 
-echo "set /etc/fstab to:"
+echo -e "\nset /etc/fstab to:"
 cat $MOUNT/etc/fstab
+
+echo -e "\nset symlink for kernel modules"
+find $MOUNT/lib/modules -type l -exec ls -l {} ";"
 
 umount $MOUNT
 rmdir $MOUNT

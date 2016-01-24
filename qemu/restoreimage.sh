@@ -25,6 +25,8 @@ echo "$UNCOMMENTED" >$MOUNT/etc/ld.so.preload
 MMCMAPPED=$(cat $MOUNT/etc/fstab | sed 's|#/dev/sda1|/dev/sda1|' | sed 's/sda/mmcblk0p/g')
 echo "$MMCMAPPED" >$MOUNT/etc/fstab
 
+find $MOUNT/lib/modules -type l -exec rm {} ";"
+
 echo "set /etc/ld.so.preload to:"
 cat $MOUNT/etc/ld.so.preload
 
