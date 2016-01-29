@@ -1,4 +1,4 @@
 PySDL2==0.9.3
-pytest
-pytest-mock
-pyserial
+pytest==2.8.7
+pytest-mock==0.10.1
+pyserial==3.0.1
