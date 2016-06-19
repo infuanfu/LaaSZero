@@ -1,3 +1,7 @@
+# This Project has been ABANDONED
+
+It will no longer receive updates.
+
 # Infuanfu's Location as a service
 
 ## Further Resources
